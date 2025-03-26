@@ -89,15 +89,15 @@ def jwt_get_username_from_payload_handler(payload):
 
 def jwt_encode_handler(payload):
     key = api_settings.JWT_PRIVATE_KEY or jwt_get_secret_key(payload)
-    print(f"jwt_encode_handler key = {key}") 
-    print(f"jwt_encode_handler payload = {payload}") 
-    print(f"jwt_encode_handler api_settings.JWT_ALGORITHM = {api_settings.JWT_ALGORITHM}") 
+    #print(f"jwt_encode_handler key = {key}") 
+    #print(f"jwt_encode_handler payload = {payload}") 
+    #print(f"jwt_encode_handler api_settings.JWT_ALGORITHM = {api_settings.JWT_ALGORITHM}") 
     encode_key = jwt.encode(
         payload,
         key,
         algorithm=api_settings.JWT_ALGORITHM
     )
-    print(f"jwt_encode_handler encode_key = {encode_key}") 
+    #print(f"jwt_encode_handler encode_key = {encode_key}") 
     return encode_key
 
 
@@ -108,10 +108,10 @@ def jwt_decode_handler(token):
     unverified_payload = jwt.decode(
         token, options={"verify_signature": False}
     )
-    print(f"secret_key token = {token}") 
+    #print(f"secret_key token = {token}") 
 
     secret_key = jwt_get_secret_key(unverified_payload)
-    print(f"secret_key = {secret_key}") 
+    #print(f"secret_key = {secret_key}") 
     decode_key = jwt.decode(
         token,
         api_settings.JWT_PUBLIC_KEY or secret_key,
@@ -121,36 +121,9 @@ def jwt_decode_handler(token):
         audience=api_settings.JWT_AUDIENCE,
         issuer=api_settings.JWT_ISSUER,
     )
-    print(f"secret_key  decode_key = {decode_key}") 
+    #print(f"secret_key  decode_key = {decode_key}") 
     # ✅ Fully verify the token
     return decode_key
-
-    # options = {
-    #     'verify_exp': api_settings.JWT_VERIFY_EXPIRATION,
-    # }
-    # # get user from token, BEFORE verification, to get user secret key
-    # unverified_payload = jwt.decode(token, None, False)
-    # secret_key = jwt_get_secret_key(unverified_payload)
-    # # return jwt.decode(
-    # #     token,
-    # #     api_settings.JWT_PUBLIC_KEY or secret_key,
-    # #     api_settings.JWT_VERIFY,
-    # #     options=options,
-    # #     leeway=api_settings.JWT_LEEWAY,
-    # #     audience=api_settings.JWT_AUDIENCE,
-    # #     issuer=api_settings.JWT_ISSUER,
-    # #     algorithms=[api_settings.JWT_ALGORITHM]
-    # # )
-
-    # return jwt.decode(
-    #     token,
-    #     api_settings.JWT_PUBLIC_KEY or secret_key,
-    #     options={"verify_signature": api_settings.JWT_VERIFY, **options},
-    #     leeway=api_settings.JWT_LEEWAY,
-    #     audience=api_settings.JWT_AUDIENCE,
-    #     issuer=api_settings.JWT_ISSUER,
-    #     algorithms=[api_settings.JWT_ALGORITHM]
-    # )
 
 
 def jwt_response_payload_handler(token, user=None, request=None):
